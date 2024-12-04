@@ -1,0 +1,48 @@
+Down data set from https://www.kaggle.com/datasets/travisdaws/spatiotemporal-wildlife-dataset
+Unzip dataset into a single folder
+
+scp animal_output.csv jbang6@129.146.230.230:/home/jbang6
+
+ssh jbang6@129.146.230.230
+
+hdfs dfs -mkdir -p /tmp/wildlife
+hdfs dfs -put animal_output.csv /tmp/wildlife/data
+
+CREATE TABLE animal_data (
+    id DOUBLE,
+    observed_on_string STRING,
+    observed_on DATE,
+    time_observed_at STRING,
+    time_zone STRING,
+    quality_grade STRING,
+    license STRING,
+    image_url STRING,
+    latitude DOUBLE,
+    longitude DOUBLE,
+    positional_accuracy DOUBLE,
+    public_positional_accuracy DOUBLE,
+    geoprivacy STRING,
+    taxon_geoprivacy STRING,
+    scientific_name STRING,
+    common_name STRING,
+    iconic_taxon_name STRING,
+    taxon_id INT,
+    taxon_kingdom_name STRING,
+    taxon_phylum_name STRING,
+    taxon_class_name STRING,
+    taxon_order_name STRING,
+    taxon_family_name STRING,
+    taxon_genus_name STRING,
+    taxon_species_name STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE
+LOCATION '/tmp/wildlife/data';
+
+SELECT * FROM_UNIXTIME(UNIX_TIMESTAMP(observed_on_string, 'MM/dd/yyyy'), 'yyyy-MM-dd') AS cleaned_date
+FROM animal_data;
+
+select * from animal_data LIMIT 10;
+
+scp jbang6@129.146.230.230:/home/jbang6/animal_data.csv c:/tmp
